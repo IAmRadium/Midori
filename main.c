@@ -4,8 +4,10 @@ Md Rasid Ali
 */
 #include<stdio.h>
 
+/*defining the beta round constant*/
+unsigned char beta[19][16]={{0,0,0,1,0,1,0,1,1,0,1,1,0,0,1,1},{0,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0},{1,0,1,0,0,1,0,0,0,0,1,1,0,1,0,1},{0,1,1,0,0,0,1,0,0,0,0,1,0,0,1,1},{0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,1},{1,1,0,1,0,0,0,1,0,1,1,1,0,0,0,0},{0,0,0,0,0,0,1,0,0,1,1,0,0,1,1,0},{0,0,0,0,1,0,1,1,1,1,0,0,1,1,0,0},{1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,1},{0,1,0,0,0,0,0,0,1,0,1,1,1,0,0,0},{0,1,1,1,0,0,0,1,1,0,0,1,0,1,1,1},{0,0,1,0,0,0,1,0,1,0,0,0,1,1,1,0},{0,1,0,1,0,0,0,1,0,0,1,1,0,0,0,0},{1,1,1,1,1,0,0,0,1,1,0,0,1,0,1,0},{1,1,0,1,1,1,1,1,1,0,0,1,0,0,0,0},{0,1,1,1,1,1,0,0,1,0,0,0,0,0,0,1},{0,0,0,1,1,1,0,0,0,0,1,0,0,1,0,0},{0,0,1,0,0,0,1,1,1,0,1,1,0,1,0,0},{0,1,1,0,0,0,1,0,1,0,0,0,1,0,1,0}};
 /*Below Sbox is used for Midori128*/
-char Sb1[]={0x1,0x0,0x5,0x3,0xe,0x2,0xf,0x7,0xd,0xa,0x9,0xb,0xc,0x8,0x4,0x6};
+unsigned char Sb1[]={0x1,0x0,0x5,0x3,0xe,0x2,0xf,0x7,0xd,0xa,0x9,0xb,0xc,0x8,0x4,0x6};
 int shuffle[]={0,10,5,15,14,4,11,1,9,3,12,6,7,13,2,8};
 /*Defining MixColumn*//*DOUBTFUL*/
 void MixColumn(char state[]){
@@ -30,6 +32,16 @@ void ShuffleCell(char state[]){
 void AddRoundKey(char state[],char key[]){
 	for(int i=0;i<16;i++){
 		state[i]^=key[i];
+	}
+}
+/*Defining AddRoundKey_with_Beta*/
+void  AddRoundKey_with_beta(char state[],char key[],int iteration){
+	char temp_key[16];
+	for(int i=0;i<16;i++){
+		temp_key[i]=key[i]^beta[iteration][i];
+	}
+	for(int i=0;i<16;i++){
+		state[i]^=temp_key[i];
 	}
 }
 /*defining the SubCell function*/
@@ -72,19 +84,19 @@ void SubCell(char state[]){
 }
 int main(){
 	/*Defining the plaintext and key*/
-	char state[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-	char key[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	unsigned char state[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	unsigned char key[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 	AddRoundKey(state,key);
 	for(int i=0;i<19;i++){
 		SubCell(state);
 		ShuffleCell(state);
 		MixColumn(state);
-		AddRoundKey(state,key);
+		AddRoundKey_with_beta(state,key,i);
 	}
 	SubCell(state);
 	AddRoundKey(state,key);
 	for(int i=0;i<16;i++){
-		printf("%d",state[i]);
+		printf("%x",state[i]);
 	}
 	printf("\n");
 	return 0;
