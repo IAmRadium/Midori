@@ -18,15 +18,16 @@ void MixColumn(char state[]){
 		state[i*4+3]=state[i*4]^state[i*4+1]^state[i*4+2];
 	}
 }
+
 /*Defining the Shuffle Cell Function*/
 void ShuffleCell(char state[]){
-	unsigned char temp;
+	char cell[16];
 	for(int i=0;i<16;i++){
-		int swap_index=shuffle[i];
-		temp=state[swap_index];
-		state[swap_index]=state[i];
-		state[i]=temp;
+		cell[i]=state[i];	
 	}
+	state[0]=cell[0];state[1]=cell[10];state[2]=cell[5];state[3]=cell[15];state[4]=cell[14];state[5]=cell[4];state[6]=cell[11];state[7]=cell[1];
+	state[8]=cell[9];state[9]=cell[3];state[10]=cell[12];state[11]=cell[6];state[12]=cell[7];state[13]=cell[13];state[14]=cell[2];state[15]=cell[8];
+
 }
 /*Defining the AddRoundKey*/
 void AddRoundKey(char state[],char key[]){
@@ -78,21 +79,25 @@ void SSb3(char *cell){
 }
 
 void SubCell(char state[]){
-	for(int i=0;i<16;i++){
-		SSb0(&state[i]);SSb1(&state[i]);SSb2(&state[i]);SSb3(&state[i]);
-	}
+	SSb0(&state[0]);SSb0(&state[4]);SSb0(&state[8]);SSb0(&state[12]);
+	SSb1(&state[1]);SSb1(&state[5]);SSb1(&state[9]);SSb1(&state[13]);
+	SSb2(&state[2]);SSb2(&state[6]);SSb2(&state[10]);SSb2(&state[14]);
+	SSb3(&state[3]);SSb3(&state[7]);SSb3(&state[11]);SSb3(&state[15]);
 }
 int main(){
 	/*Defining the plaintext and key*/
 	unsigned char state[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 	unsigned char key[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	/*Key Whitening*/
 	AddRoundKey(state,key);
-	for(int i=0;i<19;i++){
+	/*Round Functions*/
+	for(int i=0;i<=18;i++){
 		SubCell(state);
 		ShuffleCell(state);
 		MixColumn(state);
 		AddRoundKey_with_beta(state,key,i);
 	}
+	/*Last Round*/
 	SubCell(state);
 	AddRoundKey(state,key);
 	for(int i=0;i<16;i++){
