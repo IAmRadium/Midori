@@ -1,6 +1,6 @@
 /*
-Midori Lightweight Block Cipher
-Md Rasid Ali
+Midori: Low Energy Lightweight Block Cipher
+Md Rasid Ali, Crypto Research Lab, CSE,  IIT Kharagpur
 */
 #include<stdio.h>
 
@@ -8,15 +8,20 @@ Md Rasid Ali
 unsigned char beta[19][16]={{0,0,0,1,0,1,0,1,1,0,1,1,0,0,1,1},{0,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0},{1,0,1,0,0,1,0,0,0,0,1,1,0,1,0,1},{0,1,1,0,0,0,1,0,0,0,0,1,0,0,1,1},{0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,1},{1,1,0,1,0,0,0,1,0,1,1,1,0,0,0,0},{0,0,0,0,0,0,1,0,0,1,1,0,0,1,1,0},{0,0,0,0,1,0,1,1,1,1,0,0,1,1,0,0},{1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,1},{0,1,0,0,0,0,0,0,1,0,1,1,1,0,0,0},{0,1,1,1,0,0,0,1,1,0,0,1,0,1,1,1},{0,0,1,0,0,0,1,0,1,0,0,0,1,1,1,0},{0,1,0,1,0,0,0,1,0,0,1,1,0,0,0,0},{1,1,1,1,1,0,0,0,1,1,0,0,1,0,1,0},{1,1,0,1,1,1,1,1,1,0,0,1,0,0,0,0},{0,1,1,1,1,1,0,0,1,0,0,0,0,0,0,1},{0,0,0,1,1,1,0,0,0,0,1,0,0,1,0,0},{0,0,1,0,0,0,1,1,1,0,1,1,0,1,0,0},{0,1,1,0,0,0,1,0,1,0,0,0,1,0,1,0}};
 /*Below Sbox is used for Midori128*/
 unsigned char Sb1[]={0x1,0x0,0x5,0x3,0xe,0x2,0xf,0x7,0xd,0xa,0x9,0xb,0xc,0x8,0x4,0x6};
-int shuffle[]={0,10,5,15,14,4,11,1,9,3,12,6,7,13,2,8};
+
 /*Defining MixColumn*//*DOUBTFUL*/
 void MixColumn(char state[]){
-	for(int i=0;i<4;i++){
-		state[i*4]=state[i*4+1]^state[i*4+2]^state[i*4+3];
-		state[i*4+1]=state[i*4]^state[i*4+2]^state[i*4+3];
-		state[i*4+2]=state[i*4]^state[i*4+1]^state[i*4+3];
-		state[i*4+3]=state[i*4]^state[i*4+1]^state[i*4+2];
+	char cell[16];
+	for(int i=0;i<16;i++){
+		cell[i]=state[i];	
 	}
+	for(int i=0;i<4;i++){
+		state[i*4]=cell[i*4+1]^cell[i*4+2]^cell[i*4+3];
+		state[i*4+1]=cell[i*4]^cell[i*4+2]^cell[i*4+3];
+		state[i*4+2]=cell[i*4]^cell[i*4+1]^cell[i*4+3];
+		state[i*4+3]=cell[i*4]^cell[i*4+1]^cell[i*4+2];
+	}
+	
 }
 
 /*Defining the Shuffle Cell Function*/
@@ -85,9 +90,13 @@ void SubCell(char state[]){
 	SSb3(&state[3]);SSb3(&state[7]);SSb3(&state[11]);SSb3(&state[15]);
 }
 int main(){
-	/*Defining the plaintext and key*/
-	unsigned char state[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-	unsigned char key[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	/*Test Vectors, given in the original paper; https://eprint.iacr.org/2015/1142.pdf */
+	//unsigned char state[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	//unsigned char key[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	//expected ciphertext= c055cbb95996d14902b60574d5e728d6
+	unsigned char state[]={0x51,0x08,0x4c,0xe6,0xe7,0x3a,0x5c,0xa2,0xec,0x87,0xd7,0xba,0xbc,0x29,0x75,0x43};
+	unsigned char key[]={0x68,0x7d,0xed,0x3b,0x3c,0x85,0xb3,0xf3,0x5b,0x10,0x09,0x86,0x3e,0x2a,0x8c,0xbf};
+	//expected ciphertext= 1e0ac4fddff71b4c1801b73ee4afc83d
 	/*Key Whitening*/
 	AddRoundKey(state,key);
 	/*Round Functions*/
