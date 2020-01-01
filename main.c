@@ -1,6 +1,6 @@
 /*
 Midori: Low Energy Lightweight Block Cipher
-Md Rasid Ali, Crypto Research Lab, CSE,  IIT Kharagpur
+Md Rasid Ali, Crypto Research Lab, CSE,  IIT Kharagpur, india
 */
 #include<stdio.h>
 
