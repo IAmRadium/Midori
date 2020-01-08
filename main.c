@@ -4,7 +4,7 @@ Md Rasid Ali, Crypto Research Lab, CSE,  IIT Kharagpur, india
 */
 #include<stdio.h>
 
-/*defining the beta round */
+/*defining the beta round of Midori */
 unsigned char beta[19][16]={{0,0,0,1,0,1,0,1,1,0,1,1,0,0,1,1},{0,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0},
 			    {1,0,1,0,0,1,0,0,0,0,1,1,0,1,0,1},{0,1,1,0,0,0,1,0,0,0,0,1,0,0,1,1},
 			    {0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,1},{1,1,0,1,0,0,0,1,0,1,1,1,0,0,0,0},
