@@ -4,7 +4,7 @@ Md Rasid Ali, Crypto Research Lab, CSE,  IIT Kharagpur, india
 */
 #include<stdio.h>
 
-/*defining the beta round constant*/
+/*defining the beta round */
 unsigned char beta[19][16]={{0,0,0,1,0,1,0,1,1,0,1,1,0,0,1,1},{0,1,1,1,1,0,0,0,1,1,0,0,0,0,0,0},
 			    {1,0,1,0,0,1,0,0,0,0,1,1,0,1,0,1},{0,1,1,0,0,0,1,0,0,0,0,1,0,0,1,1},
 			    {0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,1},{1,1,0,1,0,0,0,1,0,1,1,1,0,0,0,0},
