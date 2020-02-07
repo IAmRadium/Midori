@@ -1,5 +1,5 @@
 /*
-Midori: Low Energy Lightweight Block Ciphe by subhodeep banikr
+Midori: Low Energy Lightweight Block Ciphe by subhodeep banik et. al.
 Md Rasid Ali, Crypto Research Lab, CSE,  IIT Kharagpur, india
 */
 #include<stdio.h>
